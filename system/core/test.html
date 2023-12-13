@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="content">
+        <p>Test</p>
+    </div>
+    
+    <div id="elementH"></div>
+    <button onClick="generatePDF();">Generate</button>
+    <script src="http://localhost/reports/static/js/jquery.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script>
+        function generatePDF(){
+            window.jsPDF = window.jspdf.jsPDF
+            var doc = new jsPDF();
+            var elementHTML = $('#contnet').html();
+            var specialElementHandlers = {
+                '#elementH': function (element, renderer) {
+                    return true;
+                }
+            };
+            doc.fromHTML(elementHTML, 15, 15, {
+                'width': 170,
+                'elementHandlers': specialElementHandlers
+            });
+
+            // Save the PDF
+            doc.save('sample-document.pdf');
+        }
+    </script>
+</body>
+</html>

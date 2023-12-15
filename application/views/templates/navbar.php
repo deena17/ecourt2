@@ -37,7 +37,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{% url 'listed-today' %}" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Case Objection</p>
                 </a>
@@ -63,7 +63,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="{% url 'logout' %}" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fa fa-sign-out-alt"></i>
               <p>Log Out</p>
             </a>

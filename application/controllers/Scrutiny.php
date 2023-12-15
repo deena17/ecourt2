@@ -13,7 +13,7 @@
         }
 
         public function index(){
-            $this->load->view('scrutiny', []);
+            $this->load->view('index');
         }
 
         public function objection(){
@@ -26,7 +26,7 @@
         public function indexregister(){
             $this->data['title'] = 'Welcome';
             $this->data['indexes'] = $this->indexregister->getEIndexRegisters();
-            $this->load->view('index', $this->data);
+            $this->load->view('index_register', $this->data);
         }
 
 

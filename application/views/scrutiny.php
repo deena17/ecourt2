@@ -7,7 +7,7 @@
             </div>
             <div class="card-body">
                <div class="row">
-                    <div class="col-md-5 offset-md-3">
+                    <div class="col-md-6 offset-md-3">
                         <div class="form-group row">
                             <label for="filing_number" class="col-sm-3 col-form-label">Filing Number</label>
                             <div class="col-sm-9">
@@ -82,16 +82,29 @@
                                             <td><?php echo $o->objtype; ?></td>
                                             <td>
                                                 <div class="icheck-success d-inline">
-                                                    <input type="radio" id="r1-<?php echo $o->objcode; ?>" name="name-<?php echo $o->objcode; ?>">
-                                                    <label for="r1-<?php echo $o->objcode; ?>">Yes</label>
+                                                    <input 
+                                                        data-objid="<?php echo $o->objcode; ?>"
+                                                        type="radio" 
+                                                        id="yes-<?php echo $o->objcode; ?>" 
+                                                        name="objection-<?php echo $o->objcode; ?>" 
+                                                        onclick="enableTextBox(<?php echo $o->objcode; ?>)" 
+                                                    />
+                                                    <label for="yes-<?php echo $o->objcode; ?>">Yes</label>
                                                 </div>
                                                 <div class="icheck-danger d-inline ml-3">
-                                                    <input type="radio" id="r2-<?php echo $o->objcode; ?>" name="name-<?php echo $o->objcode; ?>" checked>
-                                                    <label for="r2-<?php echo $o->objcode; ?>">No</label>
+                                                    <input 
+                                                        data-objid="<?php echo $o->objcode; ?>"
+                                                        type="radio" 
+                                                        id="no-<?php echo $o->objcode; ?>" 
+                                                        name="objection-<?php echo $o->objcode; ?>" 
+                                                        checked 
+                                                        onclick="disableTextBox(<?php echo $o->objcode; ?>)" 
+                                                    />
+                                                    <label for="no-<?php echo $o->objcode; ?>">No</label>
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" readonly="readonly">
+                                                <input type="text" class="form-control" readonly="readonly" id="<?php echo $o->objcode; ?>-textbox">
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -113,19 +126,19 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Communication on Date</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control datepicker">
                             </div>
                         </div>
                         <div class="col-md-3 offset-md-3">
                             <div class="form-group">
                                 <label for="">Objection Compliance Date</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control datepicker">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Document Receipt Date</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control datepicker">
                             </div>
                         </div>
                 </div>
@@ -138,6 +151,16 @@
 </div>
 
 <script>
+
+    function enableTextBox(id){
+        $(`#${id}-textbox`).attr('readonly', false);
+    }
+
+    function disableTextBox(id){
+        $(`#${id}-textbox`).val('');
+        $(`#${id}-textbox`).attr('readonly', true);
+    }
+
     $("#objection-list").hide();
 
     $('#filing_number').change(function(){
@@ -159,9 +182,9 @@
 
     $('input[type=radio][name=objection]').change(function() {
         var filing_number = $("#filing_number").val();
-        if (filing_number == ''){
-            alert('Please select filing number')
-            return
+        if(filing_number == ''){
+            alert('Please select the filing number');
+            return false
         }
         if (this.value == 'yes') {
             $("#objection-list").show();

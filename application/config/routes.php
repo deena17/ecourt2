@@ -49,6 +49,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'welcome';
-$route['404_override'] = '';
+$route['default_controller'] = 'auth';
+$route['404_override'] = 'auth/error404';
 $route['translate_uri_dashes'] = FALSE;
+
+$route[''] = 'auth/login';
+$route['auth/login'] = 'auth/login';
+$route['auth/logout'] = 'auth/logout';
+$route['dashboard'] = 'dashboard/index';
+$route['case/details-by-filing-number/(:any)'] = 'cases/get_case_details/$1';
+$route['scrutiny'] = 'scrutiny/index';
+$route['scrutiny/objection'] = 'scrutiny/objection';
+$route['scrutiny/(:any)/objection/documents'] = 'scrutiny/list_documents/$1';
+$route['scrutiny/(:any)/objection/update-document'] = 'scrutiny/update_objection/$1';
+$route['indexregister/search'] = 'indexRegister/search/';
+$route['indexregister/cause-list'] = 'indexRegister/cause_list/';
+$route['indexregister/(:any)/documents'] = 'indexRegister/documents/$1';
+$route['indexregister/get-eindex-document/(:any)/(:num)'] = 'indexRegister/get_eindex_document/$1/$2';
+$route['indexregister/get-index-document/(:any)/(:num)'] = 'indexRegister/get_index_document/$1/$2';

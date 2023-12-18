@@ -8,8 +8,8 @@
             $this->load->model('CaseModel', 'case');
         }
 
-        public function getDetailsByFilingNo($filing_number){
+        public function get_case_details($filing_number){
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode($this->case->getDetailsByFilingNumber($filing_number));
+            echo json_encode($this->case->get_by_filing_number($filing_number));
         }
     }

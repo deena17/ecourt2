@@ -7,7 +7,7 @@
           <img src="<?php echo base_url(); ?>static/dist/img/highcourtlogo.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">PJ, Chennai</a>
+          <a href="#" class="d-block"><?php echo $this->session->userdata('fullname'); ?></a>
         </div>
       </div>
       <!-- SidebarSearch Form -->
@@ -37,7 +37,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="<?php echo base_url(); ?>scrutiny/objection" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Case Objection</p>
                 </a>
@@ -64,6 +64,26 @@
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
+              <i class="nav-icon fa fa-list"></i>
+              <p>Index Register<i class="fas fa-angle-left right"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="<?php echo base_url(); ?>indexregister/cause-list" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Cause List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url(); ?>indexregister/search" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Search</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="<?php echo base_url(); ?>index.php/auth/logout" class="nav-link">
               <i class="nav-icon fa fa-sign-out-alt"></i>
               <p>Log Out</p>
             </a>

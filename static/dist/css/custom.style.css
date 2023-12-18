@@ -14,3 +14,10 @@
 .no-border td{
     padding:8px!important;
 }
+.login-box{
+    width:450px;
+}
+.modal-body{
+    border-top: 1px solid darkgray;
+    border-bottom: 1px solid darkgray;
+}

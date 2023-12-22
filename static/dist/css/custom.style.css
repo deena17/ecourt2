@@ -21,3 +21,6 @@
     border-top: 1px solid darkgray;
     border-bottom: 1px solid darkgray;
 }
+.error-page > .headline {
+    font-weight: 500;
+}  

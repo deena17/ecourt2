@@ -41,18 +41,22 @@
         public function getIndexRegisters($data){
             $db = $this->load->database($this->est_dbname, TRUE);
             $index = array();
-            $query1 = $db->select('cino')->from('civil_t')->where(array(
-                'regcase_type'=>$data['case_type'], 
-                'reg_no'=> $data['case_no'],
-                'reg_year' => $data['case_year']
-                ));
-                $index = $db->get()->row();
+            $db->select('cino');
+            $db->from('civil_t');
+            $db->where('regcase_type', $data['case_type']); 
+            $db->where('reg_no',  $data['case_no']);
+            $db->where('reg_year' ,  $data['case_year']);
+            if(!empty($data['court_no']))
+                $db->where('court_no' ,  $data['court_no']);
+            $index = $db->get()->row();
             if(empty($index)){
-                $query2 = $db->select('cino')->from('civil_t_a')->where(array(
-                    'regcase_type'=>$data['case_type'], 
-                    'reg_no'=> $data['case_no'],
-                    'reg_year' => $data['case_year']
-                    ));
+                $db->select('cino');
+                $db->from('civil_t_a');
+                $db->where('regcase_type', $data['case_type']); 
+                $db->where('reg_no',  $data['case_no']);
+                $db->where('reg_year' ,  $data['case_year']);
+                if(!empty($data['court_no']))
+                    $db->where('court_no' ,  $data['court_no']);
                 $index = $db->get()->row();
             }
             if(!empty($index)){
@@ -78,7 +82,7 @@
                 $index = $db->get()->row();
             }
             if(!empty($index)){
-                $db->select('i.cino, i.srno, d.docu_name, i.paperdate');
+                $db->select('i.cino, i.srno, d.docu_name, i.paperdate, i.pleading_no, i.remarks, i.description');
                 $db->from('index_register as i');
                 $db->join('docu_type_t as d', "d.docu_type=CAST(i.description AS integer)");
                 $db->where('cino', $index->cino);
@@ -133,8 +137,7 @@
             );
         }
 
-        public function update_document_objection($data){
-            print_r($data);
+        public function update_objection($data){
             $db = $this->load->database($this->est_dbname, TRUE);
             $civilt = $db->where('cino', $data['cino'])->get('civil_t')->row(); 
             $db->set('filing_no', $civilt->filing_no);
@@ -145,71 +148,144 @@
             $db->where(array('cino' => $data['cino'], 'srno' => $data['srno']));
             $result = $db->update('eindex_register');
 
-            if($result && $data['objection'] == 'Y'){
+            if($result):
                 $db->select('*');
                 $db->from('eindex_register');
                 $db->where(array('cino'=> $data['cino'], 'srno'=>$data['srno']));
                 $eindex = $db->get()->row(); 
-                $insert_data = array(
-                    'caseno'            => $eindex->caseno,
-                    'srno'              => $eindex->srno,
-                    'description'       => $eindex->description,
-                    'paperdate'         => $eindex->paperdate,
-                    'noofparts'         => $eindex->noofparts,
-                    'alphabetical'      => $eindex->alphabetical,
-                    'remarks'           => $eindex->remarks,
-                    'lalphabetical'     => $eindex->lalphabetical,
-                    'lremarks'          => $eindex->lremarks,
-                    'display'           => $eindex->display,
-                    'upload_date'       => $eindex->upload_date,
-                    'cino'              => $eindex->cino,
-                    'doc_year'          => $eindex->doc_year,
-                    'doc_no'            => $eindex->doc_no,
-                    'filing_no'         => $eindex->filing_no,
-                    'amount'            => $eindex->amount,
-                    'name'              => $eindex->name,
-                    'type'              => $eindex->type,
-                    'party_no'          => $eindex->party_no,
-                    'adv_name'          => $eindex->adv_name,
-                    'adv_cd'            => $eindex->adv_cd,
-                    'extra_party'       => $eindex->extra_party,
-                    'objection'         => $eindex->objection,
-                    'oldnumber'         => $eindex->oldnumber,
-                    'remarks1'          => $eindex->remarks1,
-                    'advname1'          => $eindex->advname1,
-                    'advcd1'            => $eindex->advcd1,
-                    'efil_dt'           => $eindex->efil_dt,
-                    'econfirm'          => 'R',
-                    'efilno'            => $eindex->efilno,
-                    'create_on'         => $eindex->create_on,
-                    'amd'               => $eindex->amd,
-                    'create_modify'     => date("Y-m-d H:i:s"),
-                    'reason_for_rej'    => $eindex->reason_for_rej,
-                    'lreason_for_rej'   => $eindex->lreason_for_rej,
-                    'in_person'         => $eindex->in_person,
-                    'pleading_no'       => $eindex->pleading_no,
-                    'case_ia'           => $eindex->case_ia,
-                    'new_cino'          => $eindex->new_cino,
-                    'ia_no'             => $eindex->ia_no,
-                    'consumed_on'       => $eindex->consumed_on,
-                    'verified_on'       => $eindex->verified_on,
-                );
-                $result2 = $db->insert('eindex_register_rejected', $insert_data);
+                if($data['objection'] == 'Y'):
+                    $result2 = $this->update_eindex_register($eindex);
+                    if($result2):
+                        return true;
+                    else:
+                        return false;
+                    endif;
+                endif;
+                if($data['objection'] == 'N'):
+                    $result3 = $this->update_index_register($eindex);
+                    if($result3):
+                        return true;
+                    else:
+                        return false;
+                    endif;
+                endif;
+            else:
+                return false;
+            endif;
+        }
 
-                if($result2){
-                    return TRUE;
-                }
-                else{
-                    return FALSE;
-                }
+        private function update_eindex_register($eindex){
+            $db = $this->load->database($this->est_dbname, TRUE);
+            $data = array(
+                'caseno'            => $eindex->caseno,
+                'srno'              => $eindex->srno,
+                'description'       => $eindex->description,
+                'paperdate'         => $eindex->paperdate,
+                'noofparts'         => $eindex->noofparts,
+                'alphabetical'      => $eindex->alphabetical,
+                'remarks'           => $eindex->remarks,
+                'lalphabetical'     => $eindex->lalphabetical,
+                'lremarks'          => $eindex->lremarks,
+                'display'           => $eindex->display,
+                'upload_date'       => $eindex->upload_date,
+                'cino'              => $eindex->cino,
+                'doc_year'          => $eindex->doc_year,
+                'doc_no'            => $eindex->doc_no,
+                'filing_no'         => $eindex->filing_no,
+                'amount'            => $eindex->amount,
+                'name'              => $eindex->name,
+                'type'              => $eindex->type,
+                'party_no'          => $eindex->party_no,
+                'adv_name'          => $eindex->adv_name,
+                'adv_cd'            => $eindex->adv_cd,
+                'extra_party'       => $eindex->extra_party,
+                'objection'         => $eindex->objection,
+                'oldnumber'         => $eindex->oldnumber,
+                'remarks1'          => $eindex->remarks1,
+                'advname1'          => $eindex->advname1,
+                'advcd1'            => $eindex->advcd1,
+                'efil_dt'           => $eindex->efil_dt,
+                'econfirm'          => 'R',
+                'efilno'            => $eindex->efilno,
+                'create_on'         => $eindex->create_on,
+                'amd'               => $eindex->amd,
+                'create_modify'     => date("Y-m-d H:i:s"),
+                'reason_for_rej'    => $eindex->reason_for_rej,
+                'lreason_for_rej'   => $eindex->lreason_for_rej,
+                'in_person'         => $eindex->in_person,
+                'pleading_no'       => $eindex->pleading_no,
+                'case_ia'           => $eindex->case_ia,
+                'new_cino'          => $eindex->new_cino,
+                'ia_no'             => $eindex->ia_no,
+                'consumed_on'       => $eindex->consumed_on,
+                'verified_on'       => $eindex->verified_on,
+            );
+            $result = $db->insert('eindex_register_rejected', $data);
+            if($result){
+                return true;
             }
-            else{
-                if($result1){
-                    return TRUE;
-                }
-                else{
-                    return FALSE;
-                }
+            return false;
+        }
+
+
+        private function update_index_register($eindex){
+            $db = $this->load->database($this->est_dbname, TRUE);
+            $already_exists = $db->where(array('cino'=>$eindex->cino, 'srno'=>$eindex->srno))->get('index_register')->row();
+            if($already_exists){
+                return true;
             }
+            $data = array(
+                'caseno'            => $eindex->caseno,
+                'srno'              => $eindex->srno,
+                'description'       => $eindex->description,
+                'paperdate'         => $eindex->paperdate,
+                'noofparts'         => $eindex->noofparts,
+                'alphabetical'      => $eindex->alphabetical,
+                'remarks'           => $eindex->remarks,
+                'lalphabetical'     => $eindex->lalphabetical,
+                'lremarks'          => $eindex->lremarks,
+                'display'           => $eindex->display,
+                'upload_date'       => $eindex->upload_date,
+                'cino'              => $eindex->cino,
+                'doc_year'          => $eindex->doc_year,
+                'doc_no'            => $eindex->doc_no,
+                'filing_no'         => $eindex->filing_no,
+                'amount'            => $eindex->amount,
+                'name'              => $eindex->name,
+                'type'              => $eindex->type,
+                'party_no'          => $eindex->party_no,
+                'adv_name'          => $eindex->adv_name,
+                'adv_cd'            => $eindex->adv_cd,
+                'extra_party'       => $eindex->extra_party,
+                'objection'         => $eindex->objection,
+                'oldnumber'         => $eindex->oldnumber,
+                'remarks1'          => $eindex->remarks1,
+                'advname1'          => $eindex->advname1,
+                'advcd1'            => $eindex->advcd1,
+                'amd'               => $eindex->amd,
+                'create_modify'     => date("Y-m-d H:i:s"),
+                'pleading_no'       => $eindex->pleading_no,
+                'case_ia'           => $eindex->case_ia,
+                'new_cino'          => $eindex->new_cino,
+                'ia_no'             => $eindex->ia_no,
+            );
+            $result = $db->insert('index_register', $data);
+            if($result):
+                return true;
+            else:
+                return false;
+            endif;
+        }
+
+        public function delete_index_register($cino, $srno){
+            $db = $this->load->database($this->est_dbname, TRUE);
+            $db->where_in('cino', $cino);
+            $db->where_in('srno', $srno);
+            $result = $db->delete('index_register');
+            if($result):
+                return true;
+            else:
+                return false;
+            endif;
         }
     }

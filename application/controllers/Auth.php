@@ -43,7 +43,7 @@
                         'userid'        => $userdata['user']->userid,
                         'establishment' => $userdata['role']->establishmentid,
                         'est_dbname'    => $data['establishment'],
-                        'court_no'      => $userdata['role']->court_id,
+                        'court_no'      => $userdata['court']->court_no,
                         'role'          => [$userdata['role']->role_type_id],
                         'case_type'     => $userdata['case_type'],
                         'isLoggedIn'    => true
@@ -94,5 +94,9 @@
 
         public function error404(){
             $this->load->view('auth/404');
+        }
+
+        public function error403(){
+            $this->load->view('auth/403');
         }
     }

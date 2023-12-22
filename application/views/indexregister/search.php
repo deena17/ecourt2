@@ -5,13 +5,53 @@
             <div class="card-header text-center">
                 <h3 class="card-title">Index Register</h3>
             </div>
-            <div class="card-body p-2">
+            <div class="card-body">
                 <div class="" id="document-alert"></div>
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-4 offset-md-2">
+                            <div class="form-group">
+                                <label for="case_type">Case type</label>
+                                <select name="case_type" id="case_type" class="form-control">
+                                    <option value="">Select casetype</option>
+                                    <?php foreach($case_type as $t): ?>
+                                        <option value="<?php echo $t->case_type; ?>" <?php echo set_select('case_type', $t->case_type); ?>><?php echo $t->type_name; ?></option>      
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="case_no">Case Number</label>
+                                <input type="text" class="form-control" name="case_no" id="case_no" value="<?php echo set_value('case_no'); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="case_year">Case Year</label>
+                                <input type="text" class="form-control" name="case_year" id="case_year" value="<?php echo set_value('case_year'); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-2 pt-4 mt-2">
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-success" value="Submit">
+                            </div>
+                        </div>
+                        <div class="col-md-9 offset-md-2">
+                            <?php if($this->session->flashdata('message')): ?>
+                                <div class="alert <?php echo $this->session->flashdata('alert-class'); ?> alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <span><?php echo $this->session->flashdata('message'); ?></span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </form>
                 <?php if(isset($indexs)): ?>
                 <div class="row">
                     <div class="col-md-4">
                         <ul class="list-group">
-                        <?php foreach($indexs as $i): ?>
+                            <?php foreach($indexs as $i): ?>
                             <input type="hidden" value="<?php echo $i->cino; ?>" name="cino" id="cino">
                             <input type="hidden" value="<?php echo $i->srno; ?>" name="srno[]">
                             <li class="list-group-item" id="list_<?php echo $i->srno; ?>">
@@ -47,14 +87,12 @@
                             <div class="card-header text-danger" id="document-title">
                                 ...
                             </div>
-                            <div class="card-body" style="min-height:600px" id="document-content">
+                            <div class="card-body p-1" style="min-height:600px" id="document-content">
 
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php else: ?>
-                    <p class="text-danger text-center"><strong>No documents found</strong></p>
                 <?php endif; ?>
             </div>
         </div>
@@ -63,7 +101,7 @@
 
 <script>
     function loadDocument(cino, srno){
-      $.ajax({
+        $.ajax({
             method: 'POST',
             url: `<?php echo base_url()."indexregister/get-index-document/"; ?>${cino}/${srno}`,
             data: { cino, srno },

@@ -6,10 +6,9 @@
         public function __construct(){
             parent::__construct();
             $this->load->model('AuthModel', 'auth');
-            $this->load->model('EstablishmentModel', 'est');
             $this->load->model('CaseModel', 'case');
             $this->load->model('ObjectionModel', 'objection');
-            $this->load->model('IndexRegisterModel', 'indexregister');
+            $this->load->model('IndexRegisterModel', 'index');
         }
 
         public function index(){
@@ -22,6 +21,7 @@
             }
             if(!$this->permission->has(['FORA'])){
                 $this->load->view('auth/403');
+                return;
             }
             $this->data['cases'] = $this->case->get_filing_numbers();
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -60,23 +60,42 @@
             $this->load->view('scrutiny/objection', $this->data);
         }
 
-        public function list_documents($filing_number){
-            $this->data['documents'] = $this->indexregister->getEIndexRegisters($filing_number);
+
+        public function document_objection($filing_number){
+            if(!$this->session->userdata('isLoggedIn')){
+                return redirect('auth/login');
+            }
+            if(!$this->permission->has(['FORA'])){
+                $this->load->view('auth/403');
+            }
+            $this->data['title'] = 'Document wise objection'; 
+            $this->data['documents'] = $this->index->getEIndexRegisters($filing_number);
+            $this->load->view('templates/header', $this->data);
             $this->load->view('scrutiny/document_objection', $this->data);
+            $this->load->view('templates/footer');
         }
 
+
         public function update_objection($cino){
+            header('Content-Type: application/json; charset=utf-8');
             $data = array(
                 'cino'      => $this->input->post('cino'),
                 'srno'      => $this->input->post('srno'),
                 'objection' => $this->input->post('objection'),
                 'remarks'   => $this->input->post('remarks')
             );
-            $result = $this->indexregister->update_objection($data);
+            $result = $this->index->update_objection($data);
             if($result){
-                return TRUE;
+                echo json_encode(array(
+                    'status' => 'success',
+                    'code'   => '200'
+                ));
+                return;
             }
-            return FALSE;
+            echo json_encode(array(
+                'status' => 'failure',
+                'code'   => '400'
+            ));
         }
 
 

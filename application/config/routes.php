@@ -56,14 +56,19 @@ $route['translate_uri_dashes'] = FALSE;
 $route[''] = 'auth/login';
 $route['auth/login'] = 'auth/login';
 $route['auth/logout'] = 'auth/logout';
+$route['auth/403'] = 'auth/error403';
 $route['dashboard'] = 'dashboard/index';
 $route['case/details-by-filing-number/(:any)'] = 'cases/get_case_details/$1';
+
 $route['scrutiny'] = 'scrutiny/index';
 $route['scrutiny/objection'] = 'scrutiny/objection';
-$route['scrutiny/(:any)/objection/documents'] = 'scrutiny/list_documents/$1';
-$route['scrutiny/(:any)/objection/update-document'] = 'scrutiny/update_objection/$1';
-$route['indexregister/search'] = 'indexRegister/search/';
+$route['scrutiny/(:any)/objection/documents'] = 'scrutiny/document_objection/$1';
+$route['scrutiny/(:any)/objection/update'] = 'scrutiny/update_objection/$1';
+
+$route['indexregister/search'] = 'indexRegister/search_index/';
 $route['indexregister/cause-list'] = 'indexRegister/cause_list/';
-$route['indexregister/(:any)/documents'] = 'indexRegister/documents/$1';
+$route['indexregister/(:any)/documents'] = 'indexRegister/list_index/$1';
 $route['indexregister/get-eindex-document/(:any)/(:num)'] = 'indexRegister/get_eindex_document/$1/$2';
 $route['indexregister/get-index-document/(:any)/(:num)'] = 'indexRegister/get_index_document/$1/$2';
+$route['indexregister/delete'] = 'indexRegister/delete';
+// $route['indexregister/delete'] = 'indexRegister/delete_selected';

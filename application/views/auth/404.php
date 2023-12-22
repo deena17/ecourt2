@@ -1,30 +1,23 @@
-<?php $this->load->view('auth/header', array('title' => '404 page not found')); ?>
-<div class="content-wrapper">
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">404 Error Page</li>
-                    </ol>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>404 Not found</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>static/plugins/fontawesome-free/css/all.min.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>static/dist/css/adminlte.min.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>static/dist/css/custom.style.css">
+    </head>
+    <body class="bg-light" style="background:#f4f6f4;!important">
+        <section class="content mt-5">
+            <div class="error-page" style="margin-top:15%!important;padding:10px!important">
+                <h2 class="headline text-orange"> <strong>404</strong></h2>
+                <div class="error-content">
+                    <h3 class="text-orange"><i class="fas fa-exclamation-triangle"></i> <strong>Oops! Page not found.</strong></h3>
+                    <p>We could not find the page you were looking for. Meanwhile, you may <a href="<?php echo base_url(); ?>auth/login">return to login page.</a></p>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="content pt-3">
-        <div class="error-page">
-            <h2 class="headline text-warning"> <strong>404</strong></h2>
-            <div class="error-content">
-                <h3 class="text-warning"><i class="fas fa-exclamation-triangle"></i> <strong>Oops! Page not found.</strong></h3>
-                <p>We could not find the page you were looking for. Meanwhile, you may <a href="<?php echo base_url(); ?>auth/login">return to login page.</a></p>
-            </div>
-        </div>
-    </section>
-</div>
-
-
-<?php $this->load->view('auth/footer'); ?>
+        </section>
+    </body>
+</html>

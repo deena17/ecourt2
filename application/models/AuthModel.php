@@ -52,10 +52,17 @@
                 array_push($user_case_type, $t->case_type_id);
             endforeach;
 
+            // $court_no = null;
+            // foreach($role as $r):
+            //     if($r->court_no !== null)
+            //     $court_no = $r->court_no;
+            // endforeach;
+            
             return array(
                 'user' => $user,
                 'role' => $role,
-                'case_type' => $user_case_type
+                'case_type' => $user_case_type,
+                // 'court_no' => $this->db->where(array('user_id' =>$user->userid, 'establishmentid'=> $establishemnt->est_code, 'court_id'=> 'is not null'))->get('id_role_est')->row();
             );
 
         }

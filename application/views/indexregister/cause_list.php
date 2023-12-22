@@ -1,4 +1,3 @@
-<?php $this->load->view('templates/header', ['title' => 'Document Objection']); ?>
 <div class="content-wrapper">
     <section class="content pt-3">
         <div class="card card-outline card-primary">
@@ -137,5 +136,3 @@
         });
     }
 </script>
-
-<?php $this->load->view('templates/footer'); ?>

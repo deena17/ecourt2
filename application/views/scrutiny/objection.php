@@ -145,6 +145,15 @@
 
 <script>
 
+    $(function(){
+        if($('input[type=radio][name=objection]:checked').val() == 'Y'){
+            $("#objection-remarks").attr("disabled", false);
+            $("#communication-date").attr("disabled", false);
+            $("#compliance-date").attr("disabled", false);
+            $("#receipt-date").attr("disabled", false);
+        }
+    });
+
     $('#filing_number').change(function(){
       var filing_number = $(this).val();
       $.ajax({
@@ -192,12 +201,12 @@
             $("#receipt-date").attr("disabled", false);
         }
         else if (this.value == 'N') {
-            $("#objection-remarks").attr("disabled", true);
-            $("#communication-date").attr("disabled", true);
-            $("#compliance-date").attr("disabled", true);
-            $("#receipt-date").attr("disabled", true);
+            $("#objection-remarks").attr("disabled", true).removeClass('is-invalid');
+            $("#communication-date").attr("disabled", true).removeClass('is-invalid');
+            $("#compliance-date").attr("disabled", true).removeClass('is-invalid');
+            $("#receipt-date").attr("disabled", true).removeClass('is-invalid');
         }
-});
+    });
 
 </script>
 
